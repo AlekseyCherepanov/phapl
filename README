@@ -1,37 +1,37 @@
-PhaPl - программа построения фазового портрета
+PhaPl - a program to plot and research phase planes
 
-Поддерживается Windows, Linux и Mac OS X (OS X не тестировался).
+Support Windows, Linux and Mac OS X (Mac OS X was not tested)
 
-Зависимости:
+Dependencies
 - Maxima
-- Qt4 (включая QtCore, QtGui и QtScript)
+- Qt4 (including QtCore, QtGui and QtScript)
 - LaTeX
-- если собирать из исходников
+- bulding from sources:
   - Qt4 SDK
-  - gcc (mingw на Windows)
+  - gcc (mingw on Windows)
 
-Программа использует текущий каталог для хранения временных файлов.
-Поэтому её нужно вызывать из её папки.
+The program uses current directory to store temporary files. So it should be called from its directory.
 
-Планируется версия на Python.
+Python version is planned.
+
+At the moment, all labels in the program are in Russian.
+
 
 Linux
 
-В шелле в папке проекта:
+In shell in folder of the project:
 qmake
 make
 ./phapl
 
+
 Windows
 
-Есть бинарный пакет
+There is a binary package (all labels are in Russian)
 http://portret.googlecode.com/files/phase_plane_helper.2013.07.02.7z
 
-Он включает несвободные задачи, взятые из
-Асташова И.В., Никишкин В.А.  Практикум по курсу «Дифференциальные уравнения». Учебное пособие. Изд. 3-е, исправленное. М.: Изд. центр ЕАОИ, 2010. 94 с., ил.
+It includes non-free tasks taken from
+Astashova I.V., Nikishkin V.A.  Practicum on course "Differential equations". Tutorial. 3rd edition, revised. Moscow: Publishing Center of EOI, 2010. 94 p., illustrated.
+(Асташова И.В., Никишкин В.А.  Практикум по курсу «Дифференциальные уравнения». Учебное пособие. Изд. 3-е, исправленное. М.: Изд. центр ЕАОИ, 2010. 94 с., ил.)
+The author provided implied permission to distribute verbatim copies of the tasks for use in MESI and MSU.
 
-Автор предоставил неявное разрешение на их распространение в
-неизменном виде для использования в МЭСИ и МГУ.
-
-Чтобы "оторвать" Maxima от папки после установки, надо убрать путь в
-вызываемом батнике.
