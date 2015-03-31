@@ -1,14 +1,15 @@
 PhaPl - a program to plot and research phase planes
 
-Support Windows, Linux and Mac OS X (Mac OS X was not tested)
+It supports Windows, Linux and Mac OS X (Mac OS X was not tested)
 
-Dependencies
+Dependencies:
 - Maxima
 - Qt4 (including QtCore, QtGui and QtScript)
 - LaTeX
-- bulding from sources:
-  - Qt4 SDK
-  - gcc (mingw on Windows)
+
+Additional dependencies to build from sources:
+- Qt4 SDK
+- gcc (mingw on Windows)
 
 The program uses current directory to store temporary files. So it should be called from its directory.
 

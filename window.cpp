@@ -30,7 +30,7 @@
 
 Window::Window()
 {
-    // ** We do not use first element.
+    // ** We do not use the first element.
     m_helpLabels << 0;
     m_helpSwap << 0;
 
@@ -45,14 +45,9 @@ Window::Window()
 
     m_layout->addWidget(
         createHelpLabel(
-            "<b>Введите систему</b> HELP",
+            "<b>Enter system of equations</b> HELP",
             // %% Reformat
-            "Для ввода системы можно использовать переменные (x, y), константы "
-            "(e, pi и любые числа; десятичная часть отделяется точкой), функции "
-            "(sin, cos, sqrt (корень квадратный), tan (тангенс), atan или arctg (арктангенс), "
-            "asin (арксинус), acos (арккосинус), abs (модуль), ln или log (логарифм)), операции (+, -, *, "
-            "/, ^ (возведение в степень)), Круглые скобки для группирования. Вокруг "
-            "аргумента функции надо обязательно ставить скобки."));
+            "To enter a system of equations, you may use variables (x, y), constants (e, pi and any numbers; decimal part is delimited by dot '.'), functions (sin, cos, sqrt (square root), tan, atan or arctg, asin, acos, abs, ln or log (natural logarithm)), operators (+, -, *, /, ^ (power)), parenthesis for grouping. Parenthesis are always needed for arguments for functions."));
 
     // setStyleSheet("QComboBox QAbstractItemView { background-color: yellow; decoration-position: right; }");
     // setStyleSheet("QComboBox QAbstractItemView::item { background-color: light green; }");
@@ -146,9 +141,9 @@ Window::Window()
 
     m_layout->addWidget(
         createHelpLabel(
-            "Точки для поиска решения методом Ньютона HELP",
+            "Points to search singular points by Newton method HELP",
             // %% Reformat
-            "Из этих точек будет начат поиск решений методом Ньютона. Формат описания такой же, как у дополнительных точек исследования."
+            "Search of the singular points will be started from these points. The format to enter the points is the same as for additional points to research."
             ));
     m_mnewton = new QLineEdit(this);
     m_layout->addWidget(m_mnewton);
@@ -157,16 +152,16 @@ Window::Window()
 
     m_layout->addWidget(
         createHelpLabel(
-            "Дополнительные точки исследования HELP",
+            "Additional points to research HELP",
             // %% Reformat
-            "Это поле позволяет вручную ввести список точек для исследования. Они будут добавлены к списку особых точек, найденных программой, и будут исследованы как особые точки, даже если не являются таковыми. Это поле стоит использовать, <b>если программа не может найти особые точки</b>, находит не все особые точки и для управления границами построения общего фазового портрета. Изменение границ общего фазового портрета возможно, потому что все исследуемые точки (плюс окрестность радиуса 1) отображаются на общем фазовом портрете. Каждая точка вводится формате <b>[x=значение, y=значение]</b>. Список разделён запятыми. Например, чтобы получить фазовый портрет ширины и высоты 10 с центром в начале координат (при условии отсутствия точек за пределами этого квадрата), надо ввести: <b>[x=-5, y=-5], [x=5, y=5]</b> или [x=5, y=-5], [x=-5, y=5]."
+            "This field allows you to enter a list of points to research manually. The points will be added to the list of singular points found by the software. The points will be researched as singular point even if they are not singular. It is rational to use this field <b>if the software cannot find singular points</b> or cannot find all points or if you would like to change boundaries of phase plane to be drawn. Boundaries are modifiable this way because each point (with the locality of size 1) is shown on the phase plane. Each point should be entered using <b>[x=value, y=value]</b> format. The list of points should be separated by commas. For instance, <b>[x=-4, y=-4], [x=4, y=4]</b> or [x=4, y=-4], [x=-4, y=4] should be entered to get a phase plane with width=10 and height=10 with the center in (0, 0)."
             ));
     m_specials = new QLineEdit(this);
     m_layout->addWidget(m_specials);
     connect(m_specials, SIGNAL(returnPressed()),
             this, SLOT(start()));
 
-    m_startButton = new QPushButton(QString::fromUtf8("Исследовать и построить!"), this);
+    m_startButton = new QPushButton(QString::fromUtf8("Research and plot!"), this);
     m_layout->addWidget(m_startButton);
     connect(m_startButton, SIGNAL(clicked()),
             this, SLOT(start()));
@@ -204,8 +199,8 @@ QLabel *Window::createHelpLabel(const char *normalText, const char *helpText)
     QString h = n + " <p style='background: lightyellow;'>" + QString::fromUtf8(helpText) + "</p>";
     QString p = "HELP";
     int k = m_helpLabels.count();
-    QString sn = QString::fromUtf8("<a href='help%1'>(&#9658; кликните сюда для получения справки)</a>").arg(k);
-    QString sh = QString::fromUtf8("<a href='help%1'>(&#9660; кликните сюда для скрытия справки)</a>").arg(k);
+    QString sn = QString::fromUtf8("<a href='help%1'>(&#9658; click here to get the help)</a>").arg(k);
+    QString sh = QString::fromUtf8("<a href='help%1'>(&#9660; click here to hide the help)</a>").arg(k);
     n = n.replace(p, sn);
     h = h.replace(p, sh);
     QLabel *l = new QLabel(n, this);
@@ -363,8 +358,9 @@ void Window::start()
     // Показываем систему в виде картинки из теха.
     layout->addWidget(
         createHelpLabel(
-            "<b>Исследуемая система</b> HELP",
-            "Здесь Вы видите запись системы в виде, близком к рукописному. Проверьте его."));
+            "<b>The system to be research</b> HELP",
+            "There is a view of the system close to handwritten. Check it please."
+            ));
     QString texX = output[4];
     QString texY = output[5];
     texX.replace("$$", "");
@@ -384,16 +380,9 @@ void Window::start()
     // устойчивость.
     layout->addWidget(
         createHelpLabel(
-            "<b>Особые точки</b> HELP",
-            "В таблице ниже приведены особые точки системы и фазовые портреты их "
-            "окрестностей (квадрате размера со стороной 2 и центром в исследуемой "
-            "особой точке). Фиолетовым цветом на данных фазовых портретах показаны "
-            "точки, вектор скорости которых направлен к особой точке, зелёным - от "
-            "особой точки. При наведении мыши на фазовый портрет на нём строится "
-            "дополнительная фазовая кривая, раскрашенная в два цвета: красная часть "
-            "показывает положительное направление движения точки по фазовой кривой из "
-            "положения указателя (увеличение времени), синяя - отрицательное "
-            "направление (уменьшение времени)."));
+            "<b>Singular points</b> HELP",
+            // %% Reformat
+            "In table below, singular points of the system and local phase planes (2x2 square with the center in the singular point) are listed. Violet color indicates points where vector of the speed tends to the singular point, green color indicated points where vector of the speed tends from the singular point. When you point the mouse onto the phase plane a temporary additional phase line is drawn. It has two colors: red shows positive direction of line (time goes forward), blue is for negative direction (times goes backward)."));
     QGridLayout *grid = new QGridLayout(this);
 #define GRID_ADD_WIDGET(widget, row, col) grid->addWidget(wrapWithBorder(widget), (row), (col))
     grid->setSpacing(0);
@@ -406,12 +395,12 @@ void Window::start()
             l->setAlignment(Qt::AlignHCenter);                          \
             GRID_ADD_WIDGET(l, 0, pos++);                               \
         } while (0)
-        AL("№");
-        AL("Координаты");
-        AL("Корни<br>характеристического<br>уравнения");
-        AL("Точка покоя");
-        AL("Фазовый портрет<br>в окрестности точки");
-        AL("Устойчивость<br>(неустойчивость)<br>тривиального<br>решения");
+        AL("#");
+        AL("Co-ordinates");
+        AL("The roots of the<br>characteristic<br>equation");
+        AL("Type of equilibria");
+        AL("Phase plane<br>of the locality");
+        AL("The stability<br>(instability)<br>of the trivial<br>solution");
 #undef AL
     }
 
@@ -481,28 +470,35 @@ void Window::start()
             type = 0;
         }
         static const char * const types [] = {
-            "Особая точка\nне допускает\nлинеаризацию",
-            "Неустойчивый узел",
-            "Устойчивый узел",
-            "Седло",
-            "Центр",
-            "Неустойчивый фокус",
-            "Устойчивый фокус",
-            "Неустойчивый вырожденный узел",
-            "Устойчивый вырожденный узел",
+            // http://wwwf.imperial.ac.uk/metric/metric_public/differential_equations/second_order/qualitative_methods_1.html
+            // %% see also http://www.scholarpedia.org/article/Equilibrium
+            //  % https://en.wikipedia.org/wiki/Phase_plane
+            //  % center - Andronov-Hopf bifurcation
+            //  % Include it here?
+            "The singular point\ndoes not allow\nlinearization",
+            "Unstable node",
+            "Stable node",
+            "Saddle",
+            "Center",
+            "Unstable focus",
+            "Stable focus",
+            // %% degenerate - improper? degenerate looks better
+            "Unstable degenerate node",
+            "Stable degenerate node",
             // ** 7а и 8а идут не по порядку, после всех.
-            "Неустойчивый дикритический узел",
-            "Устойчивый дикритический узел",
+            // %% dicritical node - star?
+            "Unstable dicritical node",
+            "Stable dicritical node"
         };
         static const char * const stabilities [] = {
-            "Особая точка\nне допускает\nлинеаризацию",
+            "The singular point\ndoes not allow\nlinearization",
             // %% Дефайны лучше заменить переменными.
-#define U "Неустойчиво"
+#define U "Unstable"
             U,
-#define AS "Асимптотически устойчиво"
+#define AS "Asymptotically stable"
             AS,
             U,
-#define L "Устойчиво по Ляпунову"
+#define L "Lyapunov stable"
             L,
             U,
             AS,
@@ -563,10 +559,10 @@ void Window::start()
     // Добавляем полный фазовый портрет
     layout->addWidget(
         createHelpLabel(
-            "<b>Общий фазовый портрет</b> HELP",
-            "Ниже приведён общий фазовый портрет системы. На нём представлены все "
-            "особые точки системы плюс окрестность шириной 1. Все лини чёрные. При "
-            "наведении мыши так же проводится дополнительная фазовая кривая."));
+            "<b>Global phase plane</b> HELP",
+            // %% Reformat
+            "Below, there is global phase plane. It contains all singular points and additional locality of size 1. All lines are black. Pointing mouse onto the phase plane causes additional phase line to be drawn. The line is in red and blue as on local phase planes."
+            ));
     QBoxLayout *hLayout = new QBoxLayout(QBoxLayout::LeftToRight, this);
     layout->addLayout(hLayout);
     hLayout->addWidget(wrapWithBorder(new CanvasFull(xList, yList, dotFooJSTexts, this, this)));
