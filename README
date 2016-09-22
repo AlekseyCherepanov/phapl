@@ -27,10 +27,10 @@ make
 Windows
 
 There is a binary package for Windows. All labels are in English. It contains free (as in Freedom) tasks.
-https://github.com/AlekseyCherepanov/phapl/releases/download/v1.0/phase_plane_helper.2015.03.28.7z
+https://github.com/AlekseyCherepanov/phapl/releases/download/v1.0/phase_plane_helper.en.2015.03.28.7z
 
 ... and with all labels in Russian and with non-free tasks:
-http://portret.googlecode.com/files/phase_plane_helper.2013.07.02.7z
+https://github.com/AlekseyCherepanov/phapl/releases/download/v1.0/phase_plane_helper.ru.2013.07.02.7z
 
 The non-free tasks were taken from
 Astashova I.V., Nikishkin V.A.  Practicum on course "Differential equations". Tutorial. 3rd edition, revised. Moscow: Publishing Center of EOI, 2010. 94 p., illustrated.
