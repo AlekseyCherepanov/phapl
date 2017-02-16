@@ -1,6 +1,6 @@
 # PhaPl
 
-For README and the program in English, check other branch [en](tree/en).
+PhaPl is a program to plot and research phase planes. There is full description in English [here](en/README). The code with labels in English lives in branch 'en'.
 
 ## Описание
 
