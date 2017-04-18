@@ -213,7 +213,7 @@ QLabel *Window::createHelpLabel(const char *normalText, const char *helpText)
     connect(l, SIGNAL(linkActivated(const QString &)),
             this, SLOT(handleLink(const QString &)));
     l->setWordWrap(true);
-    l->setMaximumWidth(500);
+    l->setMaximumWidth(600);
     m_helpLabels << l;
     m_helpSwap << h;
     return l;
@@ -281,14 +281,15 @@ void Window::start()
     QProcess maxima;
     // %% Paths.
     maxima.start(MAXIMA, arguments);
-    QFile script("solve.mac");
+    QFile script("solve2.mac");
+    // %% check for errors
     script.open(QIODevice::ReadOnly);
 
     // ** Here is a preamble for maxima. Make a separate script if it is too big.
     // %% Use subst in maxima for that.
     maxima.write("e : %e$ pi : %pi$ ln : log$ arctg : atan$\n");
 
-    maxima.write(QString("dotx : %1$ doty : %2$\n").arg(m_dotFooTexts[0]).arg(m_dotFooTexts[1]).toUtf8());
+    maxima.write((QString("dotx : ") + m_dotFooTexts[0] + "$ doty : " + m_dotFooTexts[1] + "$\n").toUtf8());
     // %% Should we use variable to track m_specials->text() like m_dotFooTexts?
     maxima.write(QString("specials : [%1]$\n").arg(m_specials->text()).toUtf8());
     maxima.write(QString("mnewtons : [%1]$\n").arg(m_mnewton->text()).toUtf8());
@@ -298,6 +299,25 @@ void Window::start()
     // Читаем результаты.
     QTextStream outputStream(&maxima);
     QStringList output;
+    QString before_cookie;
+    // Skip output till the cookie
+    while (!outputStream.atEnd()) {
+        QString t = outputStream.readLine();
+        qDebug() << t;
+        if (!t.isEmpty()) {
+            if (t == "\"label_to_sync_xAp45imswhrfVC6vfnq0\"") {
+                break;
+            }
+            before_cookie += t + "\n";
+        }
+    }
+    if (before_cookie != "") {
+        qDebug() << "problem, before cookie:" << before_cookie;
+        layout->addWidget(new QLabel(QString::fromUtf8("Возникла проблема: проверьте правильность ввода.\n") + before_cookie, this));
+        layout->addStretch();
+        m_startButton->setEnabled(true);
+        return;
+    }
     // %% Clean out previous joiner.
     // maxima режет слишком длинные строки при выводе TeX'а, поэтому
     // мы склеиваем строки, когда первая начинается с долларов, но не
@@ -356,6 +376,15 @@ void Window::start()
         qDebug() << QString("maxima %1 (+%2): ").arg(i).arg((i - lines_preamble) % lines_per_point) << output[i];
     }
     qDebug() << "maxima's output length:" << output.length();
+
+    // Check sanity of output at the beginning
+    if (output.length() == 0) {
+        qDebug() << "output length should not be 0";
+        layout->addWidget(new QLabel(QString::fromUtf8("Возникла проблема: вывод от Maxima пуст."), this));
+        layout->addStretch();
+        m_startButton->setEnabled(true);
+        return;
+    }
 
     QStringList texStrings;
     QList<QLabel *> texLabels;

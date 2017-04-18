@@ -1,0 +1,219 @@
+/* Вспомогательные вычисления для построения фазового портрета */
+
+/* LICENSE
+ * Copyright © 2012-2014 Aleksey Cherepanov <aleksey.4erepanov@gmail.com>.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted.
+ * END OF LICENSE
+ */
+
+/* ** Разложение в ряд Тейлора :
+ *  * http ://www.math.utexas.edu/pipermail/maxima/2010/020635.html */
+
+/* ** This part should be done outside of that script. */
+/*dotx : x * (2 * y - 4 * x + 1)$
+doty : (2 * y - 3 * x) * (4 * x - 5 * y + 1)$
+specials : []$*/
+
+display2d : false$
+/* ** This is needed for 24 example. */
+logexpand : false$
+
+"label_to_sync_xAp45imswhrfVC6vfnq0";
+
+/* Длина строк при выводе. */
+/* ** Это не распространяется на вывод теха. */
+/* %% А что, для теха разве нет подобной переменной? */
+LINEL : 100000$
+
+dotx;
+doty;
+
+subst("^" = pow, dotx);
+subst("^" = pow, doty);
+
+/* They give additional false when with semicolon. */
+tex(dotx)$
+tex(doty)$
+
+algexact : true$
+/*special_points : solve([dotx, doty], [x, y]);*/
+/* %% Move assignment up over errcatch. Remove next if. */
+/* %% Suppress output from algsys error. */
+errcatch(special_points : algsys([dotx, doty], [x, y]))$
+if (listp(special_points) = false) then special_points : []$
+/* Wrong: special_points : errcatch(algsys([dotx, doty], [x, y])$ */
+special_points : append(special_points, specials)$
+
+/* Перебор целочисленных точек для решения системы */
+/* %% Use mnewton and/or eliminate + find_root.
+ *  % See part 4 of http://csulb.edu/~woollett/ */
+np : flatten(makelist(makelist([x = i, y = j], i, -10, 10), j, -10, 10))$
+/* Workaround for 23 example */
+/* %% Periodic roots */
+np : append(np, flatten(makelist([x = i * %pi, y = 0], i, -3, 3)))$
+np : makelist([np[i], np[i + 1]], i, 1, length(np), 2)$
+np : sublist(np, lambda([s], [[0, 0]] = errcatch(subst(s, [dotx, doty]))))$
+special_points : append(special_points, np)$
+
+load(mnewton)$
+
+/* %% Make variable l_t local. */
+/*
+repackpairs(s) := (l_t : flatten(s), makelist([l_t[i], l_t[i + 1]], i, 1, length(l_t), 2))$
+mnpairs : repackpairs(makelist(makelist([i, j], i, -10, 10), j, -10, 10))$
+mnnp : makelist(errcatch(mnewton([dotx, doty], [x, y], p)), p, mnpairs)$
+mnnp : unique(mnnp)$
+special_points : append(special_points, mnnp)$
+*/
+
+mnewtons : makelist(subst(p, [x, y]), p, mnewtons)$
+mnnp : makelist(errcatch(mnewton([dotx, doty], [x, y], p)), p, mnewtons)$
+/* %% Copy-pasting is evil! */
+mnnp : flatten(mnnp)$
+mnnp : makelist([mnnp[i], mnnp[i + 1]], i, 1, length(mnnp), 2)$
+
+special_points : append(special_points, mnnp)$
+
+special_points : unique(special_points)$
+special_points : sublist(special_points, lambda([t], imagpart(t[1])));
+
+t(x, y) := display(compare(x, y))$
+s(x) := ev(x, simp)$
+
+l : length(special_points);
+
+for i : 1 thru l do block(
+    p_x : special_points[i][1],
+    p_y : special_points[i][2],
+    /* + 0 */
+    display(float(p_x)),
+    display(float(p_y)),
+    tex(p_x),
+    tex(p_y),
+    sub_x : subst(p_x, u + x),
+    sub_y : subst(p_y, v + y),
+    /* + 4 */
+    tex(sub_x),
+    tex(sub_y),
+    sub_dotx : s(subst(sub_x, x, subst(sub_y, y, dotx))),
+    sub_doty : s(subst(sub_x, x, subst(sub_y, y, doty))),
+    /* + 6 */
+    tex(sub_dotx),
+    tex(sub_doty),
+    temp_linear_sub_dotx : s(taylor(sub_dotx, [u, v], 0, 1)),
+    temp_linear_sub_doty : s(taylor(sub_doty, [u, v], 0, 1)),
+    /* + 8 */
+    tex(temp_linear_sub_dotx),
+    tex(temp_linear_sub_doty),
+    /* Убеждаемся, что убрали линейную часть,
+     * на случай численного решения. */
+    constant_subdotx :
+        s(subst(v = 0, subst(u = 0, temp_linear_sub_dotx))),
+    constant_subdoty :
+        s(subst(v = 0, subst(u = 0, temp_linear_sub_doty))),
+    /* + 10 */
+    tex(constant_subdotx),
+    tex(constant_subdoty),
+    linear_subdotx :
+        temp_linear_sub_dotx - constant_subdotx,
+    linear_subdoty :
+        temp_linear_sub_doty - constant_subdoty,
+    /* + 12 */
+    tex(linear_subdotx),
+    tex(linear_subdoty),
+    a : s(subst(1, u, subst(0, v, linear_subdotx))),
+    b : s(subst(0, u, subst(1, v, linear_subdotx))),
+    c : s(subst(1, u, subst(0, v, linear_subdoty))),
+    d : s(subst(0, u, subst(1, v, linear_subdoty))),
+    /* + 14 */
+    tex(a),
+    tex(b),
+    tex(c),
+    tex(d),
+    char_eq : s((a - lambda) * (d - lambda) - b * c),
+    /* + 18 */
+    tex(char_eq),
+    lambdas : solve(char_eq, lambda),
+    /* Если корни совпадают, то в массиве будет всего один элемент. */
+    /* %% Test this line! */
+    if (length(lambdas) = 1) then lambdas : append(lambdas, lambdas),
+    /* + 19 */
+    tex(lambdas[1]),
+    tex(lambdas[2]),
+    l1 : subst(lambdas[1], lambda),
+    l2 : subst(lambdas[2], lambda),
+    /* + 21 */
+    t(l1, l2),
+    t(l1, 0),
+    t(l2, 0),
+    /* + 24 */
+    t(realpart(l1), 0),
+    t(realpart(l2), 0),
+    t(realpart(l1), realpart(l2)),
+    t(imagpart(l1), -imagpart(l2)),
+    /* + 28 */
+    /* %% 7 & 8 */
+    /* Обозначения: l1 - \lambda_1, l2 - \lambda_2,
+           Н - Неустойчиво, У - Асимптотически устойчиво, Л - Устойчиво по Ляпунову
+# |Устойчивость|                 Тип| Признаки
+1  Н               Неустойчивый узел: l1 != l2, l1 > 0, l2 > 0
+2  У                 Устойчивый узел: l1 != l2, l1 < 0, l2 < 0
+3  Н                           Седло: l1 != l2, l1 > 0, l2 < 0 (или l1 < 0, l2 > 0)
+4  Л                           Центр: Re(l1) = Re(l2), Re(l1) = 0, Im(l1) = -Im(l2), Im(l1) != 0
+5  Н              Неустойчивый фокус: Re(l1) = Re(l2), Re(l1) > 0, Im(l1) = -Im(l2), Im(l1) != 0
+6  У                Устойчивый фокус: Re(l1) = Re(l2), Re(l1) < 0, Im(l1) = -Im(l2), Im(l1) != 0
+7  Н   Неустойчивый вырожденный узел: l1 = l2, l1 > 0, исключая 7а
+7a Н Неустойчивый дикритический узел: l1 = l2, l1 > 0, x' = ax, y' = ay, a > 0
+8  У     Устойчивый вырожденный узел: l1 = l2, l1 < 0, исключая 8а
+8a У   Устойчивый дикритический узел: l1 = l2, l1 < 0, x' = ax, y' = ay, a < 0
+Для 7а мы будем использовать число 9, а для 8а - 10, отрицательные значения показывают ошибки.
+    */
+    r1 : realpart(l1),
+    r2 : realpart(l2),
+    i1 : imagpart(l1),
+    i2 : imagpart(l2),
+    type : (
+        if (i1 = 0 and i2 = 0) then (
+            if (r1 = r2) then (
+                if (l1 > 0) then (
+                    if (b = 0 and c = 0 and a = d and a > 0) then
+                        9
+                    else
+                        7
+                ) else if (l1 < 0) then (
+                    if (b = 0 and c = 0 and a = d and a < 0) then
+                        10
+                    else
+                        8
+                ) else
+                    -4
+            ) else (
+                if (r1 > 0 and r2 > 0) then
+                    1
+                else if (r1 < 0 and r2 < 0) then
+                    2
+                else if ((r1 < 0 and r2 > 0) or (r1 > 0 and r2 < 0)) then
+                    3
+                else
+                    -3
+            )
+        ) else (
+            if (r1 = r2 and i1 = -i2) then (
+                if (r1 = 0) then
+                    4
+                else if (r1 > 0) then
+                    5
+                else if (r1 < 0) then
+                    6
+                else
+                    -2
+            ) else (
+                -1
+            )
+        )
+    ),
+    display(type)
+    /* +29 */
+)$
