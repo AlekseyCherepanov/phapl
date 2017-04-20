@@ -19,7 +19,7 @@ Phapl - умная программа для построения фазовых
 ## Windows
 
 Есть бинарный пакет (~185mb, ~600мб в распакованном виде):
-https://github.com/AlekseyCherepanov/phapl/releases/download/v1.1/phapl.ru.2017-02-12.7z
+https://github.com/AlekseyCherepanov/phapl/releases/download/v1.1/phapl.ru.2017-02-13.7z
 
 Программу можно распаковать на съёмный носитель.
 
