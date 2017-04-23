@@ -1,5 +1,5 @@
 /* LICENSE
- * Copyright © 2012 Aleksey Cherepanov <aleksey.4erepanov@gmail.com>.
+ * Copyright © 2012,2017 Aleksey Cherepanov <aleksey.4erepanov@gmail.com>.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted.
