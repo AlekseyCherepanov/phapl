@@ -42,7 +42,7 @@ https://github.com/AlekseyCherepanov/phapl/releases/download/v1.1/phapl.ru.2017-
   - Qt4 SDK
   - gcc и g++ (mingw на Windows)
 
-Команды для сборки из исходников и запуска, в шелле в папке проекта:
+Команды для сборки из исходников и запуска, в шелле в папке src/:
 ```shell
 qmake
 make
