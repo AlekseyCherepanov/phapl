@@ -2,6 +2,10 @@
 # Phase Plane Helper
 # Python implementation
 
+# Copyright © 2014 Aleksey Cherepanov <lyosha@openwall.com>
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted.
+
 # %% Update documentation
 
 from PyQt4.QtCore import *

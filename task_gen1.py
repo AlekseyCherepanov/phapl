@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
-# Phase Plane Helper
-# Python implementation
+# task generator based on phapl.py
+
+# Copyright © 2014 Aleksey Cherepanov <lyosha@openwall.com>
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted.
 
 # Drawing method
 # %% Use 'exec' as a fallback if weave is not available
